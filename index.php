@@ -50,7 +50,7 @@
             <tr>
                 <td style="text-align: left">Enter Age</td>
                 <td>
-                    <input type="number" name="age" id="age" autocomplete="off" />
+                    <input type="number" name="age" id="age" min="1" max="100" onchange="checkAge(this.value)" autocomplete="off" />
                 </td>
             </tr>
             <tr>

@@ -15,8 +15,8 @@ function save() {
         return;
     }
 
-    if (Number(age) < 1) {
-        alert('Age must be greater than 0');
+    if (Number(age) < 1 || Number(age) > 100) {
+        alert('Age must be greater than 0 and less than 100');
         return;
     }
 
@@ -108,6 +108,12 @@ function display() {
                     "</tr>";
             });
             document.getElementById("data").innerHTML = table;
+            document.getElementById("id").value = ''
+            document.getElementById("name").value = ''
+            document.getElementById("age").value = ''
+            document.getElementById("city").innerHTML = '<option value="0">Select City</option>';
+            document.getElementById('state').value = 0
+            document.querySelector('button[type="submit"]').value = 'insert'
         }
     });
 }
