@@ -12,6 +12,29 @@
     }
 
     if(isset($_POST['type'])) {
+        if($_POST['type'] == 'filter') {
+            $filter = $_POST['q'];
+
+            $stmt = 'SELECT C.CID, C.CNAME, S.SNAME FROM CITY_LIST C
+                    LEFT JOIN STATE_LIST S ON S.SID = C.SID
+                    WHERE C.CNAME LIKE "%'.$filter.'%"
+                    OR S.SNAME LIKE "%'.$filter.'%";';
+            
+            if($res = mysqli_query($conn, $stmt)) {
+                $resArray = array();
+                $rowCnt = $res->num_rows;
+                $cnt = 0;
+
+                while(($row = mysqli_fetch_assoc($res)) && ($cnt < $rowCnt)) {
+                    $resArray[$cnt++] = $row;
+                }
+                
+                echo json_encode($resArray);
+            } else {
+                echo json_encode(mysqli_error($conn));
+            }
+        }
+
         if($_POST['type'] == 'insert') {
             $name = $_POST['name'];
             $sid = $_POST['sid'];

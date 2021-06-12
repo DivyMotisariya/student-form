@@ -27,6 +27,7 @@ function save() {
             document.querySelector('button[type="submit"]').value = "insert";
             document.getElementById("name").value = "";
             document.getElementById("name").focus();
+            document.getElementById('search').value = "";
             display();
         },
     });
@@ -40,14 +41,14 @@ function display() {
             type: "disp"
         },
         success: (data) => {
-            var table = `<tr>
+            var table = `<!--<tr>
                             <td style="border:none; display:none;" colspan="4">
                                 <button>Insert</button>
                             </td>
                             <td style="border:none;" colspan="7">
                                 <button class='btn-primary btn-sm' onclick="display()">Refresh</button>
                             </td>
-                        </tr>`;
+                        </tr>-->`;
             table += `<tr>
                         <th style="display:none;" colspan="1">ID</th>
                         <th colspan="5">State Name</th>
@@ -74,7 +75,48 @@ function display() {
                     "</tr>";
             });
             document.getElementById("data").innerHTML = table;
+            $("#search").on('input', function() {
+                search($(this).val());
+            });
         },
+    });
+}
+
+function search(txt) {
+    $.post({
+        url: "./stateinsert.php",
+        data: {
+            type: "filter",
+            q: txt
+        },
+        success: function(data, status, xhr) {
+            var table = `<tr>
+                            <th style="display:none;" colspan="1">ID</th>
+                            <th colspan="5">State Name</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>`;
+            JSON.parse(data).forEach((row) => {
+                table +=
+                    "<tr>" +
+                    "<td style='display:none;'' colspan='1'>" +
+                    row.SID +
+                    "</td>" +
+                    "<td style='text-align:left;' colspan='5'>" +
+                    row.SNAME +
+                    "</td>" +
+                    "<td><button class='btn-secondary btn-sm' value=" +
+                    row.SID +
+                    " onclick='update(this.value)'>Update</button>" +
+                    "</td>" +
+                    "<td><button class='btn-secondary btn-sm' value=" +
+                    row.SID +
+                    " onclick='dlt(this.value)'>Delete</button>" +
+                    "</td>" +
+                    "</tr>";
+            });
+            document.getElementById("data").innerHTML = table;
+        }
     });
 }
 

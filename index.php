@@ -75,6 +75,8 @@
         </table>
     </form>
     <br /><br /><br />
+    <table>Search :<input type="text" id="search" placeholder="Name or City or State"></input></table>
+    <br />
     <table id="data"></table>
     </div>
 </body>

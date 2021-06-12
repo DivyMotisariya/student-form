@@ -14,6 +14,31 @@
     }
 
     if(isset($_POST['type'])) {
+        if($_POST['type'] == 'filter') {
+            $filter = $_POST['q'];
+
+            $stmt = 'SELECT S.ID, S.NAME, S.AGE, C.CNAME, ST.SNAME FROM STUDENT_DATA S
+                    LEFT JOIN CITY_LIST C ON C.CID = S.CITY
+                    LEFT JOIN STATE_LIST ST ON ST.SID = S.SID
+                    WHERE S.NAME LIKE "%'.$filter.'%"
+                    OR C.CNAME LIKE "%'.$filter.'%"
+                    OR ST.SNAME LIKE "%'.$filter.'%";';
+            
+            if($res = mysqli_query($conn, $stmt)) {
+                $resArray = array();
+                $rowCnt = $res->num_rows;
+                $cnt = 0;
+
+                while(($row = mysqli_fetch_assoc($res)) && ($cnt < $rowCnt)) {
+                    $resArray[$cnt++] = $row;
+                }
+                
+                echo json_encode($resArray);
+            } else {
+                echo json_encode(mysqli_error($conn));
+            }
+        }
+
         if($_POST['type'] == 'insert') {
             $name = $_POST['name'];
             $age = $_POST['age'];

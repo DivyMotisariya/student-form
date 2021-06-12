@@ -50,6 +50,7 @@ function save() {
             document.getElementById("state").value = 0;
             document.getElementById('city').innerHTML = '<option value="0">Select City</option>';
             document.getElementById("name").focus();
+            document.getElementById('search').value = "";
             display();
         }
     });
@@ -63,14 +64,14 @@ function display() {
             type: "disp",
         },
         success: function(data, status, xhr) {
-            var table = `<tr>
+            var table = `<!--<tr>
                                 <td style="border:none; display:none;" colspan="4">
                                     <button>Insert</button>
                                 </td>
                                 <td style="border:none;" colspan="13">
-                                    <button class="btn-primary btn-sm" onclick="display()">Refresh</button>
+                                    <button style="display: none;" class="btn-primary btn-sm" onclick="display()">Refresh</button>
                                 </td>
-                            </tr><tr>
+                            </tr>--><tr>
                             <th style="display:none;" colspan="1">ID</th>
                             <th colspan="5">Name</th>
                             <th colspan="2">Age</th>
@@ -113,7 +114,60 @@ function display() {
             document.getElementById("age").value = ''
             document.getElementById("city").innerHTML = '<option value="0">Select City</option>';
             document.getElementById('state').value = 0
-            document.querySelector('button[type="submit"]').value = 'insert'
+            document.querySelector('button[type="submit"]').value = 'insert';
+            $("#search").on('input', function() {
+                search($(this).val());
+            });
+        }
+    });
+}
+
+function search(txt) {
+    $.post({
+        url: "./insert.php",
+        data: {
+            type: "filter",
+            q: txt
+        },
+        success: function(data, status, xhr) {
+            var table = `<tr>
+                            <th style="display:none;" colspan="1">ID</th>
+                            <th colspan="5">Name</th>
+                            <th colspan="2">Age</th>
+                            <th colspan="2">City</th>
+                            <th colspan="2">State</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>`;
+            JSON.parse(data).forEach((row) => {
+                table += // onclick='show(this)'
+                    "<tr>" +
+                    "<td style='display:none;'' colspan='1'>" +
+                    row.ID +
+                    "</td>" +
+                    "<td style='text-align:left;' colspan='5'>" +
+                    row.NAME +
+                    "</td>" +
+                    "<td colspan='2'>" +
+                    row.AGE +
+                    "</td>" +
+                    "<td colspan='2'>" +
+                    row.CNAME +
+                    "</td>" +
+                    "<td colspan='2'>" +
+                    row.SNAME +
+                    "</td>" +
+                    "<td><button class='btn-secondary btn-sm' value=" +
+                    row.ID +
+                    " onclick='update(this.value)'>Update</button>" +
+                    "</td>" +
+                    "<td><button class='btn-secondary btn-sm' value=" +
+                    row.ID +
+                    " onclick='dlt(this.value)'>Delete</button>" +
+                    "</td>" +
+                    "</tr>";
+            });
+            document.getElementById("data").innerHTML = table;
         }
     });
 }

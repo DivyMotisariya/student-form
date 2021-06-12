@@ -35,6 +35,7 @@ function save() {
             document.getElementById("name").value = "";
             document.getElementById("state").value = 0;
             document.getElementById("name").focus();
+            document.getElementById('search').value = "";
             display();
         },
     });
@@ -49,14 +50,14 @@ function display() {
             type: "disp"
         },
         success: (data) => {
-            var table = `<tr>
+            var table = `<!--<tr>
                             <td style="border:none; display:none;" colspan="4">
                                 <button>Insert</button>
                             </td>
                             <td style="border:none;" colspan="9">
                                 <button class='btn-primary btn-sm' onclick="display()">Refresh</button>
                             </td>
-                        </tr>`;
+                        </tr>-->`;
             table += `<tr>
                         <th style="display:none;" colspan="1">ID</th>
                         <th colspan="5">City</th>
@@ -87,7 +88,52 @@ function display() {
                     "</tr>";
             });
             document.getElementById("data").innerHTML = table;
+            $("#search").on('input', function() {
+                search($(this).val());
+            });
         },
+    });
+}
+
+function search(txt) {
+    $.post({
+        url: "./cityinsert.php",
+        data: {
+            type: "filter",
+            q: txt
+        },
+        success: function(data, status, xhr) {
+            var table = `<tr>
+                            <th style="display:none;" colspan="1">ID</th>
+                            <th colspan="5">City</th>
+                            <th colspan="2">State</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>`;
+            JSON.parse(data).forEach((row) => {
+                table +=
+                    "<tr>" +
+                    "<td style='display:none;'' colspan='1'>" +
+                    row.CID +
+                    "</td>" +
+                    "<td style='text-align:left;' colspan='5'>" +
+                    row.CNAME +
+                    "</td>" +
+                    "<td style='text-align:left;' colspan='2'>" +
+                    row.SNAME +
+                    "</td>" +
+                    "<td><button class='btn-secondary btn-sm' value=" +
+                    row.CID +
+                    " onclick='update(this.value)'>Update</button>" +
+                    "</td>" +
+                    "<td><button class='btn-secondary btn-sm' value=" +
+                    row.CID +
+                    " onclick='dlt(this.value)'>Delete</button>" +
+                    "</td>" +
+                    "</tr>";
+            });
+            document.getElementById("data").innerHTML = table;
+        }
     });
 }
 

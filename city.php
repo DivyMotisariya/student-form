@@ -60,7 +60,8 @@
             </tr>
         </table>
     </form>
-    <br /><br /><br />
+    <br /><br /><br /><table>Search :<input type="text" id="search" placeholder="City or State"></input></table>
+    <br />
     <table id="data"></table>
     </div>
 </body>
