@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <a id="logged" hidden><?php if(isset($_COOKIE['logged'])) {echo $_COOKIE['logged'];}; ?></a>
+    <a id="logged" hidden><?php if(isset($_COOKIE['logged'])) {echo $_COOKIE['logged'] . ' ' . $_SESSION['logged'];}; ?></a>
     <div class="text-center">
         <form id='frmLogin' method="post" onsubmit="return checkLogin()">
             <!-- USER NAME -->
