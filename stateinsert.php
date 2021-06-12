@@ -15,7 +15,12 @@
         if($_POST['type'] == 'insert') {
             $name = $_POST['name'];
         
-            $insertQry = 'INSERT INTO STATE_LIST(SNAME) VALUES("'.$name.'");';
+            $idQry = 'SELECT CASE WHEN SID IS NULL THEN 1 ELSE MAX(SID) + 1 END AS SID FROM state_list';
+            $res = mysqli_query($conn, $idQry);
+
+            $sid = mysqli_fetch_array($res)['SID'];
+
+            $insertQry = 'INSERT INTO STATE_LIST VALUES('.$sid.', "'.$name.'");';
             if(mysqli_query($conn, $insertQry)) {
                 echo json_encode(Array('Saved'=>''.$name.''));
             } else {
