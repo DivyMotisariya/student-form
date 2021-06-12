@@ -15,8 +15,13 @@
         if($_POST['type'] == 'insert') {
             $name = $_POST['name'];
             $sid = $_POST['sid'];
-        
-            $insertQry = 'INSERT INTO CITY_LIST(CNAME, SID) VALUES("'.$name.'", '.$sid.');';
+                
+            $idQry = 'SELECT CASE WHEN CID IS NULL THEN 1 ELSE MAX(CID) + 1 END AS CID FROM city_list';
+            $res = mysqli_query($conn, $idQry);
+    
+            $cid = mysqli_fetch_array($res)['CID'];
+    
+            $insertQry = 'INSERT INTO CITY_LIST VALUES('.$cid.', "'.$name.'", '.$sid.');';
             if(mysqli_query($conn, $insertQry)) {
                 echo json_encode(Array('Saved'=>''.$name.''));
             } else {

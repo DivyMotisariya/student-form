@@ -19,8 +19,13 @@
             $age = $_POST['age'];
             $city = $_POST['city'];
             $state = $_POST['state'];
-        
-            $insertQry = 'INSERT INTO STUDENT_DATA(NAME, AGE, CITY, SID) VALUES("'.$name.'", '.$age.', '.$city.', '.$state.');';
+                
+            $idQry = 'SELECT CASE WHEN ID IS NULL THEN 1 ELSE MAX(ID) + 1 END AS SID FROM student_data';
+            $res = mysqli_query($conn, $idQry);
+    
+            $sid = mysqli_fetch_array($res)['SID'];
+    
+            $insertQry = 'INSERT INTO STUDENT_DATA VALUES('.$sid.', "'.$name.'", '.$age.', '.$city.', '.$state.');';
             if(mysqli_query($conn, $insertQry)) {
                 echo json_encode(Array('Saved'=>''.$name.' '.$age.''));
             } else {
